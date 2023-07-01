@@ -224,6 +224,60 @@ final class Test_ServerConverterExtensions: Test_Runtime {
         XCTAssertEqual(value, [testDate, testDate])
     }
 
+    //    | server | get | request query | text | fractionalDate | optional | getOptionalQueryItemAsText |
+    func test_getOptionalQueryItemAsText_fractionalDate() throws {
+        let query: [URLQueryItem] = [
+            .init(name: "search", value: testFractionalDateString)
+        ]
+        let value: Date? = try converter.getOptionalQueryItemAsText(
+            in: query,
+            name: "search",
+            as: Date.self
+        )
+        XCTAssertEqual(value, testFractionalDate)
+    }
+
+    //    | server | get | request query | text | fractionalDate | required | getRequiredQueryItemAsText |
+    func test_getRequiredQueryItemAsText_fractionalDate() throws {
+        let query: [URLQueryItem] = [
+            .init(name: "search", value: testFractionalDateString)
+        ]
+        let value: Date = try converter.getRequiredQueryItemAsText(
+            in: query,
+            name: "search",
+            as: Date.self
+        )
+        XCTAssertEqual(value, testFractionalDate)
+    }
+
+    //    | server | get | request query | text | array of fractionalDates | optional | getOptionalQueryItemAsText |
+    func test_getOptionalQueryItemAsText_arrayOfFractionalDates() throws {
+        let query: [URLQueryItem] = [
+            .init(name: "search", value: testFractionalDateString),
+            .init(name: "search", value: testFractionalDateString),
+        ]
+        let value: [Date]? = try converter.getOptionalQueryItemAsText(
+            in: query,
+            name: "search",
+            as: [Date].self
+        )
+        XCTAssertEqual(value, [testFractionalDate, testFractionalDate])
+    }
+
+    //    | server | get | request query | text | array of fractionalDates | required | getRequiredQueryItemAsText |
+    func test_getRequiredQueryItemAsText_arrayOfFractionalDates() throws {
+        let query: [URLQueryItem] = [
+            .init(name: "search", value: testFractionalDateString),
+            .init(name: "search", value: testFractionalDateString),
+        ]
+        let value: [Date] = try converter.getRequiredQueryItemAsText(
+            in: query,
+            name: "search",
+            as: [Date].self
+        )
+        XCTAssertEqual(value, [testFractionalDate, testFractionalDate])
+    }
+
     //    | server | get | request body | text | string-convertible | optional | getOptionalRequestBodyAsText |
     func test_getOptionalRequestBodyAsText_stringConvertible() throws {
         let body: String? = try converter.getOptionalRequestBodyAsText(

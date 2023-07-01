@@ -27,6 +27,25 @@ public protocol DateTranscoder: Sendable {
 /// A transcoder for dates encoded as an ISO-8601 string (in RFC 3339 format).
 public struct ISO8601DateTranscoder: DateTranscoder {
 
+    private static func fractionalSecondsFormatter() -> ISO8601DateFormatter {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withFractionalSeconds]
+        return formatter
+    }
+
+    private static func formatDate(_ dateString: String) -> Date? {
+        let formatters = [
+            ISO8601DateFormatter(),
+            fractionalSecondsFormatter(),
+        ]
+        for formatter in formatters {
+            if let date = formatter.date(from: dateString) {
+                return date
+            }
+        }
+        return nil
+    }
+
     /// Creates and returns an ISO 8601 formatted string representation of the specified date.
     public func encode(_ date: Date) throws -> String {
         ISO8601DateFormatter().string(from: date)
@@ -34,7 +53,7 @@ public struct ISO8601DateTranscoder: DateTranscoder {
 
     /// Creates and returns a date object from the specified ISO 8601 formatted string representation.
     public func decode(_ dateString: String) throws -> Date {
-        guard let date = ISO8601DateFormatter().date(from: dateString) else {
+        guard let date = Self.formatDate(dateString) else {
             throw DecodingError.dataCorrupted(
                 .init(
                     codingPath: [],

@@ -58,6 +58,18 @@ class Test_Runtime: XCTestCase {
         Data(testDateString.utf8)
     }
 
+    var testFractionalDate: Date {
+        Date(timeIntervalSince1970: 946_684_800)
+    }
+
+    var testFractionalDateString: String {
+        "2023-01-18T10:04:15.1234Z"
+    }
+
+    var testFractionalDateStringData: Data {
+        Data(testFractionalDateString.utf8)
+    }
+
     var testString: String {
         "hello"
     }
