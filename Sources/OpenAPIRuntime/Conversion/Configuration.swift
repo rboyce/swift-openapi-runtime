@@ -29,13 +29,12 @@ public struct ISO8601DateTranscoder: DateTranscoder {
 
     private static func fractionalSecondsFormatter() -> ISO8601DateFormatter {
         let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withFractionalSeconds]
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         return formatter
     }
 
     private static func formatDate(_ dateString: String) -> Date? {
         let formatters = [
-            ISO8601DateFormatter(),
             fractionalSecondsFormatter(),
         ]
         for formatter in formatters {
